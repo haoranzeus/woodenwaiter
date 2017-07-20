@@ -1,7 +1,7 @@
 # coding=utf-8
 """
 synopsis:基于redis的生产者-消费者模型
-author: zhanghaoran@cmhi.chinamobile.com (zhanghaoran)
+author: haoranzeus@gmail.com
 """
 import redis
 import json
