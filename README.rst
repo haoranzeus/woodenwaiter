@@ -2,6 +2,20 @@ WoodenWaiter
 ============
 Python producer-customer model based on redis
 
+Installment
+-----------
+install from pip:
+
+.. code-block:: bash
+
+    pip install woodenwaiter
+
+install from source code:
+
+.. code-block:: bash
+
+    python3 setup.py install
+
 Example Usage
 -------------
 A simple program that showing how to use WoodenWaiter
