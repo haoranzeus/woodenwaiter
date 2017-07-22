@@ -158,6 +158,10 @@ class WoodenManager:
         for customer in self.customers:
             customer.start()
 
+    def terminate_all(self):
+        for customer in self.customers:
+            customer.terminate()
+
 
 if __name__ == '__main__':
     table1 = 'cmdb'
@@ -192,8 +196,9 @@ if __name__ == '__main__':
             table=table2, dish=dish2, waiter=waiter,
             process=print_foods, seconds=3)
 
+    cooker_running = True
     def cook_sometime():
-        while True:
+        while cooker_running:
             seconds = random.randint(3, 10)
             time.sleep(seconds)
             print('cookone after {} seconds'.format(seconds))
@@ -208,4 +213,9 @@ if __name__ == '__main__':
     manager.launch()
 
     while True:
-        time.sleep(1)
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            cooker_running = False
+            manager.terminate_all()
+            break
