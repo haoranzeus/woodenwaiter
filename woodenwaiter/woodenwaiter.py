@@ -117,6 +117,7 @@ class WoodenCustomer(threading.Thread):
         self.waiter = waiter
         self.process = process
         self.seconds = seconds
+        self._running = True
 
     def call_waiter(self):
         foods = self.waiter.serve_dish(self.table_dish)
@@ -125,11 +126,14 @@ class WoodenCustomer(threading.Thread):
         else:
             return None
 
+    def terminate(self):
+        self._running = False
+
     def call_waiter_cyclic(self, seconds):
         """
         周期性检测任务队列
         """
-        while True:
+        while self._running:
             self.call_waiter()
             time.sleep(seconds)
 
