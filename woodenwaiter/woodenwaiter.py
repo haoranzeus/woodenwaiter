@@ -104,7 +104,8 @@ class WoodenCustomer(threading.Thread):
     """
     消费者
     paras:
-        table_dish - "<model>:<task>"形式的字符串
+        table - 消费者所处的模块，字符串形式
+        dish - 该消费者要消费的一种产品，字符串形式
         waiter - WoodenWaiter实例
         process - 针对取出的foods要做的处理
         seconds - 循环读取redis的周期时间

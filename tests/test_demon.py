@@ -1,6 +1,13 @@
+# coding=utf-8
+"""
+synopsis: test demon
+author: haoranzeus@gmail.com
+"""
 import time
+import sys
 from woodenwaiter.woodenwaiter import WoodenCustomer
 from woodenwaiter.woodenwaiter import WoodenWaiter
+from woodenwaiter.takeout_restaurant import TakeoutCustomer
 
 
 def test_wooden_customer():
@@ -18,9 +25,7 @@ def test_wooden_customer():
         print(foods)
 
     customer = WoodenCustomer(
-        table=table, dish=dish,
-        waiter=waiter, process=processfoods,
-        seconds=1)
+        table=table, dish=dish, waiter=waiter, process=processfoods, seconds=1)
 
     customer.start()
 
@@ -28,5 +33,32 @@ def test_wooden_customer():
     customer.terminate()
 
 
+def test_takeout_customer():
+    """
+    Run takeout_customer.py before do this test.
+    This test will post foods to "http://localhost:8080/api/customer1/" when
+    the customer get pop some stuff from  "cmdb:test_takeout_customer" list
+    """
+    table = 'cmdb'
+    dish = 'test_takeout_customer'
+    waiter = WoodenWaiter()
+    url = 'http://localhost:8080/api/customer1/'
+
+    customer = TakeoutCustomer(
+        table=table, dish=dish, waiter=waiter, customer_api_url=url, seconds=2)
+
+    customer.start()
+
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            customer.terminate()
+            sys.exit()
+
+
 if __name__ == '__main__':
-    test_wooden_customer()
+    """
+    usage: python test_demon.py <name of test function>
+    """
+    exec(sys.argv[1] + '()')
