@@ -8,6 +8,10 @@ import json
 import time
 import threading
 import random
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class WoodenMenu:
@@ -147,20 +151,50 @@ class WoodenManager:
     大堂经理，整体管理消费者
     """
     def __init__(self):
-        self.customers = []
+        self.customers = {}
+        self.cookers = {}
 
-    def add_customer(self, customer):
+    def add_customer(self, name, customer):
         assert isinstance(customer, WoodenCustomer), \
                 "customer must be a WoodenCustomer"
+        if name in self.customers.keys():
+            # TODO (zhanghaoran) add some exception
+            pass
+        else:
+            self.customers[name] = customer
 
-        self.customers.append(customer)
+    def add_cooker(self, name, cooker):
+        assert isinstance(cooker, WoodenCooker), \
+                "cooker must be a WoodenCooker"
+        if name in self.cookers.keys():
+            # TODO (zhanghaoran) add some exception
+            pass
+        else:
+            self.cookers['name'] = cooker
+
+    def remove_customer(self, name):
+        assert name in self.customers.keys(), \
+                "customer {} is not exist".format(name)
+        self.customers['name'].terminate()
+        self.customers.pop(name)
+        
+    def remove_cooker(self, name):
+        try:
+            self.cookers.pop('name')
+        except KeyError:
+            logger.warning('cooker {} is not exist'.format(name))
+
+    def cookone(self, cooker_name):
+        assert cooker_name in self.cookers.keys(), \
+                "cooker {} is not exist".format(cooker_name)
+        self.cookers[cooker_name].cookone
 
     def launch(self):
-        for customer in self.customers:
+        for customer in self.customers.values():
             customer.start()
 
     def terminate_all(self):
-        for customer in self.customers:
+        for customer in self.customers.values():
             customer.terminate()
 
 
@@ -209,8 +243,8 @@ if __name__ == '__main__':
     cooker_thread = threading.Thread(target=cook_sometime)
     cooker_thread.start()
     manager = WoodenManager()
-    manager.add_customer(customer1)
-    manager.add_customer(customer2)
+    manager.add_customer('customer1', customer1)
+    manager.add_customer('customer2', customer2)
     manager.launch()
 
     while True:

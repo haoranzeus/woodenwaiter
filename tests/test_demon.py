@@ -35,7 +35,7 @@ def test_wooden_customer():
 
 def test_takeout_customer():
     """
-    Run takeout_customer.py before do this test.
+    Run takeout_customer.py before doing this test.
     This test will post foods to "http://localhost:8080/api/customer1/" when
     the customer get pop some stuff from  "cmdb:test_takeout_customer" list
     """
