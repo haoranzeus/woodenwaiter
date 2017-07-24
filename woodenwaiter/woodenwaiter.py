@@ -1,13 +1,17 @@
 # coding=utf-8
 """
 synopsis:基于redis的生产者-消费者模型
-author: zhanghaoran@cmhi.chinamobile.com (zhanghaoran)
+author: haoranzeus@gmail.com
 """
 import redis
 import json
 import time
 import threading
 import random
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class WoodenMenu:
@@ -104,7 +108,8 @@ class WoodenCustomer(threading.Thread):
     """
     消费者
     paras:
-        table_dish - "<model>:<task>"形式的字符串
+        table - 消费者所处的模块，字符串形式
+        dish - 该消费者要消费的一种产品，字符串形式
         waiter - WoodenWaiter实例
         process - 针对取出的foods要做的处理
         seconds - 循环读取redis的周期时间
@@ -117,6 +122,7 @@ class WoodenCustomer(threading.Thread):
         self.waiter = waiter
         self.process = process
         self.seconds = seconds
+        self._running = True
 
     def call_waiter(self):
         foods = self.waiter.serve_dish(self.table_dish)
@@ -125,11 +131,14 @@ class WoodenCustomer(threading.Thread):
         else:
             return None
 
+    def terminate(self):
+        self._running = False
+
     def call_waiter_cyclic(self, seconds):
         """
         周期性检测任务队列
         """
-        while True:
+        while self._running:
             self.call_waiter()
             time.sleep(seconds)
 
@@ -142,17 +151,51 @@ class WoodenManager:
     大堂经理，整体管理消费者
     """
     def __init__(self):
-        self.customers = []
+        self.customers = {}
+        self.cookers = {}
 
-    def add_customer(self, customer):
+    def add_customer(self, name, customer):
         assert isinstance(customer, WoodenCustomer), \
                 "customer must be a WoodenCustomer"
+        if name in self.customers.keys():
+            # TODO (zhanghaoran) add some exception
+            pass
+        else:
+            self.customers[name] = customer
 
-        self.customers.append(customer)
+    def add_cooker(self, name, cooker):
+        assert isinstance(cooker, WoodenCooker), \
+                "cooker must be a WoodenCooker"
+        if name in self.cookers.keys():
+            # TODO (zhanghaoran) add some exception
+            pass
+        else:
+            self.cookers['name'] = cooker
+
+    def remove_customer(self, name):
+        assert name in self.customers.keys(), \
+                "customer {} is not exist".format(name)
+        self.customers['name'].terminate()
+        self.customers.pop(name)
+        
+    def remove_cooker(self, name):
+        try:
+            self.cookers.pop('name')
+        except KeyError:
+            logger.warning('cooker {} is not exist'.format(name))
+
+    def cookone(self, cooker_name):
+        assert cooker_name in self.cookers.keys(), \
+                "cooker {} is not exist".format(cooker_name)
+        self.cookers[cooker_name].cookone
 
     def launch(self):
-        for customer in self.customers:
+        for customer in self.customers.values():
             customer.start()
+
+    def terminate_all(self):
+        for customer in self.customers.values():
+            customer.terminate()
 
 
 if __name__ == '__main__':
@@ -188,8 +231,9 @@ if __name__ == '__main__':
             table=table2, dish=dish2, waiter=waiter,
             process=print_foods, seconds=3)
 
+    cooker_running = True
     def cook_sometime():
-        while True:
+        while cooker_running:
             seconds = random.randint(3, 10)
             time.sleep(seconds)
             print('cookone after {} seconds'.format(seconds))
@@ -199,9 +243,14 @@ if __name__ == '__main__':
     cooker_thread = threading.Thread(target=cook_sometime)
     cooker_thread.start()
     manager = WoodenManager()
-    manager.add_customer(customer1)
-    manager.add_customer(customer2)
+    manager.add_customer('customer1', customer1)
+    manager.add_customer('customer2', customer2)
     manager.launch()
 
     while True:
-        time.sleep(1)
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            cooker_running = False
+            manager.terminate_all()
+            break

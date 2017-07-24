@@ -16,6 +16,10 @@ install from source code:
 
     python3 setup.py install
 
+Run Example
+-----------
+python3 -m woodenwaiter.woodenwaiter
+
 Example Usage
 -------------
 A simple program that showing how to use WoodenWaiter
@@ -90,8 +94,9 @@ producer example:
         cooker1 = WoodenCooker(menu=menu1, waiter=waiter)
         cooker2 = WoodenCooker(menu=menu2, waiter=waiter)
 
+        cooker_running = True
         def cook_sometime():
-            while True:
+            while cooker_running:
                 seconds = random.randint(3, 10)
                 time.sleep(seconds)
                 print('cookone after {} seconds'.format(seconds))
@@ -102,7 +107,12 @@ producer example:
         cooker_thread.start()
 
         while True:
-            time.sleep(1)
+            try:
+                time.sleep(1)
+            except KeyboardInterrupt:
+                cooker_running = False
+                manager.terminate_all()
+                break
 
 classes introduce
 -----------------
@@ -164,6 +174,8 @@ call_waiter(self) - call waiter to check if foods is OK(if there is a task in re
 
 call_waiter_cyclic(self, seconds) - call waiter cyclic
 
+terminate(self) - stop customer thread genteely
+
 WoodenManager
 ~~~~~~~~~~~~~
 WoodenManager is used for WoodenCustomer centralized management. We add woodenCustomer
@@ -174,3 +186,5 @@ Methods:
 add_customer(self, customer) - add WoodenCustomer instance
 
 launch(self) - launch all WoodenCustomer Threads
+
+terminate_all(self) - stop all customers thread genteely

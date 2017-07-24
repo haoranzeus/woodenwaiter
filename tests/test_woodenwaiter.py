@@ -101,3 +101,46 @@ class TestWoodenCustomer:
         assert_false(self.customer.call_waiter())   # 此时redis没有东西
         self.cooker.cookone()       # 塞入redis一个东西
         assert_equal(self.foods, self.customer.call_waiter())   # 进行相应处理
+
+
+class TestWoodenManager:
+    def setup(self):
+        table1 = 'cmdb'
+        table2 = 'rbac'
+        dish1 = 'custom_sync'
+        dish2 = 'some_task'
+        foods1 = {
+            "action": "sync_custom_data",
+            "paras": ""
+        }
+        foods2 = {
+            "action": "some_action",
+            "paras": {
+                "para1": "value1",
+                "para2": "value2"
+            }
+        }
+        menu1 = WoodenMenu(table=table1, dish=dish1, foods=foods1)
+        menu2 = WoodenMenu(table=table2, dish=dish2, foods=foods2)
+        waiter = WoodenWaiter()
+        self.cooker1 = WoodenCooker(menu=menu1, waiter=waiter)
+        self.cooker2 = WoodenCooker(menu=menu2, waiter=waiter)
+        self.customer1 = WoodenCustomer(
+                table=table1, dish=dish1, waiter=waiter,
+                process=print_foods, seconds=1)
+        self.customer2 = WoodenCustomer(
+                table=table2, dish=dish2, waiter=waiter,
+                process=print_foods, seconds=3)
+        self.manager = WoodenManager()
+
+    def teardown(self):
+        self.manager.terminate_all()
+
+    def test_add_remove(self):
+        self.manager.add_cooker('cooker1', self.cooker1)
+        self.manager.add_cooker('cooker2', self.cooker2)
+        self.manager.add_customer('customer1', self.customer1)
+        self.manager.add_customer('customer2', self.customer2)
+        self.manager.remove_cooker('cooker1')
+        self.manager.remove_customer('customer2')
+        # TODO(zhanghaoran) add some test
