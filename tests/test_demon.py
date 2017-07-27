@@ -38,6 +38,9 @@ def test_takeout_customer():
     Run takeout_customer.py before doing this test.
     This test will post foods to "http://localhost:8080/api/customer1/" when
     the customer get pop some stuff from  "cmdb:test_takeout_customer" list
+
+    test this:
+    >lpush 'cmdb:test_takeout_customer'  '{"a": 1}'
     """
     table = 'cmdb'
     dish = 'test_takeout_customer'

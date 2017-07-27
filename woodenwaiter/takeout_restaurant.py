@@ -71,6 +71,14 @@ def add_cooker():
 
 
 def usage():
+    banner = """
+    __      _____   ___   __| | ___ _ __   __      ____ _(_) |_ ___ _ __ 
+    \ \ /\ / / _ \ / _ \ / _` |/ _ \ '_ \  \ \ /\ / / _` | | __/ _ \ '__|
+     \ V  V / (_) | (_) | (_| |  __/ | | |  \ V  V / (_| | | ||  __/ |   
+      \_/\_/ \___/ \___/ \__,_|\___|_| |_|   \_/\_/ \__,_|_|\__\___|_|   
+
+    """
+    print(banner)
     print('usage: python -m woodenwaiter.takeout_restaurant '
           '[{-h, --host} <host>] [{-p, --port} <port>]\n')
     print('optional arguments:\n')
