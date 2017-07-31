@@ -16,7 +16,7 @@ from .woodenwaiter import WoodenCustomer
 class TakeoutCustomer(WoodenCustomer):
     """
     takeout customer
-    Instand of do a python process when get a task, TakeoutCustomer call
+    Instand of doing a python process when get a task, TakeoutCustomer call
     a RESTful-API.
     The method of the API is POST. The payload is the json formated stuff
     got from redis(the foods)
@@ -72,10 +72,10 @@ def add_cooker():
 
 def usage():
     banner = """
-    __      _____   ___   __| | ___ _ __   __      ____ _(_) |_ ___ _ __ 
+    __      _____   ___   __| | ___ _ __   __      ____ _(_) |_ ___ _ __
     \ \ /\ / / _ \ / _ \ / _` |/ _ \ '_ \  \ \ /\ / / _` | | __/ _ \ '__|
-     \ V  V / (_) | (_) | (_| |  __/ | | |  \ V  V / (_| | | ||  __/ |   
-      \_/\_/ \___/ \___/ \__,_|\___|_| |_|   \_/\_/ \__,_|_|\__\___|_|   
+     \ V  V / (_) | (_) | (_| |  __/ | | |  \ V  V / (_| | | ||  __/ |
+      \_/\_/ \___/ \___/ \__,_|\___|_| |_|   \_/\_/ \__,_|_|\__\___|_|
 
     """
     print(banner)
