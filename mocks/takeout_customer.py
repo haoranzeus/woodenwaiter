@@ -39,7 +39,7 @@ def main(argv):
         elif opt in ('-h', '--host'):
             host = arg
         elif opt in ('-p', '--port'):
-            port = str(arg)
+            port = int(arg)
         else:
             usage()
             exit()

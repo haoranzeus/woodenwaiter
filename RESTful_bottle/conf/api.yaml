@@ -1,0 +1,7 @@
+url_root: /api/woodenwaiter/v0_1_0 # Needn't end with a "/".
+cmdb_database: 
+  host: 'localhost'
+  database: 'woodenwaiter'
+  user: 'root'
+  password: '123456'
+  charset: 'utf8'

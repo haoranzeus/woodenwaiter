@@ -12,5 +12,5 @@ setup(
     description='A producer-customer model based on redis',
     long_description=readme,
     packages=find_packages(exclude=['tests']),
-    install_requires=['redis'],
+    install_requires=['redis', 'bottle', 'requests', 'PyYAML'],
 )
